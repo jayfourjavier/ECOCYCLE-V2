@@ -1,0 +1,22 @@
+// HEADER GUARD
+#ifndef DEFINES_H
+#define DEFINES_H
+
+// MACROS
+#define LCD_I2C_ADDRESS 0x27
+#define LCD_COLUMNS 20
+#define LCD_ROWS 4
+
+#define MCP23017_INPUTS_ADDRESS 0x20
+#define MCP23017_INT_PIN 25 // ESP32 GPIO connected to MCP23017 INTA
+
+#define MCP23017_PROBE_HOME_PIN 1        // A1
+#define MCP23017_FOOD_HOPPER_COVER_PIN 2 // A2
+#define MCP23017_SOIL_HOPPER_COVER_PIN 3 // A3
+#define MCP23017_GATE_HOME_PIN 4         // A4
+#define MCP23017_MIXER_SAFE_PIN 5        // A5
+
+#define WIFI_SSID "YourWifiSsid"
+#define WIFI_PASSWORD "YourWifiPassword"
+
+#endif
