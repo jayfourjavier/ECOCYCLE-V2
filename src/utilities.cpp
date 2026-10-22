@@ -16,7 +16,8 @@ String getTimestampString()
     {
         return String("0000-00-00 00:00:00");
     }
-    s char buffer[32];
+
+    char buffer[32];
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &timeinfo);
     return String(buffer);
 }
@@ -86,7 +87,7 @@ void testInputsInLoop()
     uint16_t currentState = 0;
     currentState |= isFoodHopperCoverClosed() ? (1u << 0) : 0;
     currentState |= isSoilHopperCoverClosed() ? (1u << 1) : 0;
-    currentState |= isProbeHome() ? (1u << 2) : 0;
+    currentState |= isSensorHome() ? (1u << 2) : 0;
     currentState |= isGateHome() ? (1u << 3) : 0;
     currentState |= isMixerSafePositionDetected() ? (1u << 4) : 0;
 
@@ -97,7 +98,7 @@ void testInputsInLoop()
 
     lastState = currentState;
 
-    Serial.printf("%s [INPUTS] FOOD=%d SOIL=%d PROBE=%d GATE=%d MIXER=%d\n",
+    Serial.printf("%s [INPUTS] FOOD=%d SOIL=%d SENSOR=%d GATE=%d MIXER=%d\n",
                   getTimestampString().c_str(),
                   (currentState & (1u << 0)) ? 1 : 0,
                   (currentState & (1u << 1)) ? 1 : 0,

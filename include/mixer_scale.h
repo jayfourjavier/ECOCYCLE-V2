@@ -84,4 +84,31 @@ inline void calibrateScale(HX711 &scale)
     Serial.println();
 }
 
-// float getWeightGrams(sample size)
+inline float getWeightGrams(HX711 &scale, uint8_t sampleSize = 10)
+{
+    if (sampleSize == 0)
+    {
+        return 0.0f;
+    }
+
+    float total = 0.0f;
+    uint8_t validReadings = 0;
+
+    for (uint8_t i = 0; i < sampleSize; ++i)
+    {
+        if (!scale.is_ready())
+        {
+            delay(1);
+            continue;
+        }
+
+        float reading = scale.get_units(1);
+        if (!isnan(reading) && !isinf(reading))
+        {
+            total += reading;
+            ++validReadings;
+        }
+    }
+
+    return validReadings > 0 ? (total / static_cast<float>(validReadings)) : 0.0f;
+}

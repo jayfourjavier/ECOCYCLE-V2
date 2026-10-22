@@ -14,9 +14,15 @@ extern volatile bool g_mcpInterruptFlag;
 inline bool readInput(uint8_t pin);
 inline bool isFoodHopperCoverClosed();
 inline bool isSoilHopperCoverClosed();
-inline bool isProbeHome();
+inline bool isSensorHome();
 inline bool isGateHome();
 inline bool isMixerSafePositionDetected();
+
+// Backward compatibility alias for legacy naming.
+inline bool isProbeHome()
+{
+    return isSensorHome();
+}
 
 inline void setupInputs()
 {
@@ -24,7 +30,7 @@ inline void setupInputs()
 
     mcpInputs.pinMode1(MCP23017_FOOD_HOPPER_COVER_PIN, INPUT);
     mcpInputs.pinMode1(MCP23017_SOIL_HOPPER_COVER_PIN, INPUT);
-    mcpInputs.pinMode1(MCP23017_PROBE_HOME_PIN, INPUT);
+    mcpInputs.pinMode1(MCP23017_SENSOR_HOME_PIN, INPUT);
     mcpInputs.pinMode1(MCP23017_GATE_HOME_PIN, INPUT);
     mcpInputs.pinMode1(MCP23017_MIXER_SAFE_PIN, INPUT);
     mcpInputs.setPullup(MCP23017_MIXER_SAFE_PIN, true);
@@ -32,7 +38,7 @@ inline void setupInputs()
     // Configure MCP23017 to alert on any input change on the monitored pins.
     mcpInputs.mirrorInterrupts(true);
     mcpInputs.setInterruptPolarity(0);
-    mcpInputs.enableInterrupt(MCP23017_PROBE_HOME_PIN, CHANGE);
+    mcpInputs.enableInterrupt(MCP23017_SENSOR_HOME_PIN, CHANGE);
     mcpInputs.enableInterrupt(MCP23017_FOOD_HOPPER_COVER_PIN, CHANGE);
     mcpInputs.enableInterrupt(MCP23017_SOIL_HOPPER_COVER_PIN, CHANGE);
     mcpInputs.enableInterrupt(MCP23017_GATE_HOME_PIN, CHANGE);
@@ -54,11 +60,11 @@ inline void handleMcpInterrupts()
     uint16_t flags = mcpInputs.getInterruptFlagRegister();
     Serial.printf("%s [INTA] flags=0x%04X\n", getTimestampString().c_str(), flags);
 
-    if (flags & (1u << MCP23017_PROBE_HOME_PIN))
+    if (flags & (1u << MCP23017_SENSOR_HOME_PIN))
     {
-        Serial.printf("%s [INTA] PROBE_HOME changed -> %d\n",
+        Serial.printf("%s [INTA] SENSOR_HOME changed -> %d\n",
                       getTimestampString().c_str(),
-                      isProbeHome() ? 1 : 0);
+                      isSensorHome() ? 1 : 0);
     }
 
     if (flags & (1u << MCP23017_FOOD_HOPPER_COVER_PIN))
@@ -110,9 +116,9 @@ inline bool isSoilHopperCoverClosed()
     return readInput(MCP23017_SOIL_HOPPER_COVER_PIN);
 }
 
-inline bool isProbeHome()
+inline bool isSensorHome()
 {
-    return readInput(MCP23017_PROBE_HOME_PIN);
+    return readInput(MCP23017_SENSOR_HOME_PIN);
 }
 
 inline bool isGateHome()
