@@ -25,7 +25,11 @@ String getTimestampString()
 
 void setupTime()
 {
-    configTime(0, 0, "ntp.pagasa.dost.gov.ph", "time.nist.gov");
+    // Set the system clock to GMT+8 (UTC+8) for local timestamps.
+    setenv("TZ", "GMT-8", 1);
+    tzset();
+    configTime(8 * 3600, 0, "pool.ntp.org", "time.nist.gov");
+
     struct tm timeinfo;
     if (getLocalTime(&timeinfo))
     {
