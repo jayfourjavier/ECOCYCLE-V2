@@ -1,4 +1,3 @@
-#include "utilities.h"
 #include "inputs_controller.h"
 #include "defines.h"
 
@@ -17,8 +16,7 @@ String getTimestampString()
     {
         return String("0000-00-00 00:00:00");
     }
-
-    char buffer[32];
+    s char buffer[32];
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &timeinfo);
     return String(buffer);
 }

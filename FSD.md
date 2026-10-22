@@ -1,4 +1,5 @@
 # Food Waste–Loam Soil Mixing Machine
+
 ## Functional System Documentation (FSD)
 
 **Document:** `fsd.md`  
@@ -36,7 +37,7 @@ The machine is a prototype. Software interlocks complement, but do not replace, 
 The ESP32 is the central controller. Its firmware should use a **non-blocking finite-state machine (FSM)**: each state performs a bounded action, checks conditions, updates outputs, and returns control quickly. Long delays should not block sensor monitoring, emergency handling, or LCD updates.
 
 | Subsystem | Hardware | Main function |
-|---|---|---|
+| --- | --- | --- |
 | Main controller | ESP32 | FSM, interlocks, sensor processing, LCD, Firebase |
 | Food-waste grinder | AC motor, relay and contactor | Grinds food waste |
 | Soil feeder | Geared DC motor and relay | Feeds loam soil |
@@ -47,7 +48,7 @@ The ESP32 is the central controller. Its firmware should use a **non-blocking fi
 | Probe moisture | Analog capacitive soil-moisture sensor | Measures moisture signal |
 | Hopper covers | Active-high switches, COM/NO, external pull-down | HIGH means cover closed |
 | Hopper level | Two VL53L0X ToF sensors | Estimates food-waste and soil levels |
-| Batch weight | Load cell + HX711 | Measures mixer assembly weight/change |
+| Batch weight | Load cell → HX711 | Measures mixer assembly weight/change; HX711 wiring: bare = GND, red = 3.3V, white = DAT, blue = CLK |
 | User display | 20×4 I²C LCD | Shows state, readings, prompts and faults |
 | Batch logging | ESP32 Wi-Fi + Firebase | Stores one CSV record per completed batch |
 
@@ -107,7 +108,7 @@ The following assumptions should be made explicit in firmware and verified durin
 ### 4.1 Digital inputs
 
 | Input | Logical interpretation | Required response |
-|---|---|---|
+| --- | --- | --- |
 | Food hopper cover | HIGH = closed; LOW = not confirmed closed | Do not start grinding or feeding with cover open |
 | Soil hopper cover | HIGH = closed; LOW = not confirmed closed | Do not run soil feeder with cover open |
 | Probe-lift home | HIGH = probe fully up | Required before mixer motion and discharge |
@@ -121,7 +122,7 @@ The following assumptions should be made explicit in firmware and verified durin
 ### 4.2 Analog and digital measurements
 
 | Measurement | Interface | Firmware treatment |
-|---|---|---|
+| --- | --- | --- |
 | Soil temperature | PT100 → MAX31865 | Check sensor/fault status; reject invalid or out-of-range data |
 | Soil moisture | Analog capacitive sensor → ESP32 ADC | Use a calibrated ADC configuration, filtering and valid-range checks |
 | Mixer weight | Load cell → HX711 | Tare at a known empty condition; filter samples; detect unstable readings |
@@ -151,7 +152,7 @@ Recommended checks:
 ## 5. Outputs and actuator rules
 
 | Output | Actuator | General control rule |
-|---|---|---|
+| --- | --- | --- |
 | Grinder command | AC motor relay/contactor | Run only with relevant cover closed, no fault, and valid sequence state |
 | Soil feeder command | DC geared motor relay | Run only with soil cover closed and a valid feed state |
 | Mixer stepper command | Stepper driver | Move only when probe is confirmed home/up and gate position is safe for mixing |
@@ -169,7 +170,7 @@ For the AC grinder, use a correctly rated contactor and motor overload protectio
 ### 6.1 State list
 
 | State | Purpose | Exit condition |
-|---|---|---|
+| --- | --- | --- |
 | `BOOT` | Initialize pins, serial, I²C, sensor libraries and safe outputs | Initialization sequence started |
 | `SELF_TEST` | Validate critical sensors, communications and known positions | Required checks pass or fault |
 | `RECOVERY_CHECK` | Determine whether actuators are in a known safe condition after restart | Safe recovery possible or operator intervention required |
@@ -242,7 +243,7 @@ The exact gate interlock depends on the mechanical design. If the gate's only li
 ### 7.2 Recommended fault codes
 
 | Code | Condition | Default response |
-|---|---|---|
+| --- | --- | --- |
 | `E001` | Initialization or critical sensor failure | Keep actuators off; block start |
 | `E002` | Food hopper cover not confirmed closed | Stop grinder; fault or pause |
 | `E003` | Soil hopper cover not confirmed closed | Stop feeder; fault or pause |
@@ -317,6 +318,7 @@ On boot, all motor/contactor outputs must initialize to OFF before network setup
 The 20×4 LCD should present a concise live status. Example layouts:
 
 **Ready**
+
 ```text
 FoodWaste Soil Mixer
 State: READY
@@ -325,6 +327,7 @@ Batch: 0012  1000g
 ```
 
 **Mixing**
+
 ```text
 Batch: 0013
 State: MIXING
@@ -333,6 +336,7 @@ Please wait...
 ```
 
 **Sampling**
+
 ```text
 Batch: 0013
 State: SOIL SAMPLE
@@ -341,6 +345,7 @@ Moisture: 41.2 %
 ```
 
 **Fault**
+
 ```text
 !!! MACHINE FAULT !!!
 Code: E004

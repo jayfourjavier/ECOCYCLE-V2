@@ -8,6 +8,7 @@
 #define LCD_ROWS 4
 
 #define MCP23017_INPUTS_ADDRESS 0x20
+#define MCP23017_RELAY_ADDRESS 0x21
 #define MCP23017_INT_PIN 25 // ESP32 GPIO connected to MCP23017 INTA
 
 #define MCP23017_PROBE_HOME_PIN 1        // A1
@@ -18,5 +19,13 @@
 
 #define WIFI_SSID "YourWifiSsid"
 #define WIFI_PASSWORD "YourWifiPassword"
+
+#define HX711_DAT_PIN 16 // ESP32 GPIO connected to HX711 DAT/white
+#define HX711_CLK_PIN 4  // ESP32 GPIO connected to HX711 CLK/blue
+// HX711 wiring: bare = GND, red = 3.3V, white = DAT, blue = CLK
+
+#define TO_CALIBRATE 0
+#define SCALE_CALIBRATION_OFFSET 450966
+#define SCALE_CALIBRATION_FACTOR 42.943184
 
 #endif

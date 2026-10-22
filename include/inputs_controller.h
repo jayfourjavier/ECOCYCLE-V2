@@ -3,7 +3,8 @@
 #include <Arduino.h>
 #include <MCP23017.h>
 #include "defines.h"
-#include "utilities.h"
+
+extern String getTimestampString();
 
 // MCP23017 pin map for the limit switches.
 // These inputs use external pull-down resistors, so they are configured as normal INPUTs.

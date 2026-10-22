@@ -6,7 +6,8 @@
 #include <string.h>
 #include "defines.h"
 #include "machine_state.h"
-#include "utilities.h"
+
+extern String getTimestampString();
 
 static LiquidCrystal_I2C lcd(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
 
